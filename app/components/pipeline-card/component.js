@@ -1,8 +1,11 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { and } from '@ember/object/computed';
+import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
 export default Component.extend({
+  store: service(),
   eventsInfo: null,
   lastEventInfo: null,
   isAuthenticated: undefined,
@@ -18,10 +21,24 @@ export default Component.extend({
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
-  didReceiveAttrs() {
+  async init() {
+    this._super(...arguments);
+    const { pipeline } = this;
+    const metrics = await this.store.query('metric', {
+      pipelineId: pipeline.id,
+      page: 1,
+      count: 20
+    });
+
+    const result = formatMetrics(metrics);
+
+    let eventsInfos = result.eventsInfo;
+
+    let lastEventInfos = result.lastEventInfo;
+
     this.setProperties({
-      eventsInfo: this.pipeline.eventsInfo,
-      lastEventInfo: this.pipeline.lastEventInfo
+      eventsInfo: eventsInfos,
+      lastEventInfo: lastEventInfos
     });
   },
 
