@@ -10,45 +10,52 @@
       &times;
     </span>
   {{/if}}
-  <div class="branch-info">
-    {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
-      {{pipeline.scmRepo.name}}
-    {{/link-to}}
-    <div title={{pipeline.branch}}>
-      {{fa-icon "code-fork"}}
-      {{pipeline.branch}}
-    </div>
-  </div>
-  <div class="commit-info">
-    <div class="commit-status">
-      {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
-        {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
-      {{/link-to}}
-      <a href={{lastEventInfo.commitUrl}}> 
-        {{lastEventInfo.sha}}
-      </a>
-    </div>
-    <p class="commit-message" title={{lastEventInfo.commitMessage}}>
-      {{lastEventInfo.commitMessage}}
-    </p>
-  </div>
-  <div class="time-metrics">
-    <div class="duration-badge">
-      <span class="badge-label">duration</span>
-      <span class="badge-info">{{lastEventInfo.durationText}}</span>
-    </div>
-    <div class="start-time-badge">
-      <span class="badge-label">start Date</span>
-      <span class="badge-info">{{lastEventInfo.startTime}}</span>
-    </div>
-  </div>
   {{#if eventsInfo}}
-  <div class="events-thumbnail-wrapper">
-    {{events-thumbnail
-        class="events-thumbnail"
-        events=eventsInfo
-        pipelineId=pipeline.id
-    }}
-  </div>
+    <div class="branch-info">
+      {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
+        {{pipeline.scmRepo.name}}
+      {{/link-to}}
+      <div title={{pipeline.branch}}>
+        {{fa-icon "code-fork"}}
+        {{pipeline.branch}}
+      </div>
+    </div>
+    <div class="commit-info">
+      <div class="commit-status">
+        {{#link-to "pipeline" pipeline.id title=pipeline.scmRepo.name}}
+          {{fa-icon lastEventInfo.icon class=lastEventInfo.statusColor}}
+        {{/link-to}}
+        <a href={{lastEventInfo.commitUrl}}> 
+          {{lastEventInfo.sha}}
+        </a>
+      </div>
+      <p class="commit-message" title={{lastEventInfo.commitMessage}}>
+        {{lastEventInfo.commitMessage}}
+      </p>
+    </div>
+    <div class="time-metrics">
+      <div class="duration-badge">
+        <span class="badge-label">duration</span>
+        <span class="badge-info">{{lastEventInfo.durationText}}</span>
+      </div>
+      <div class="start-time-badge">
+        <span class="badge-label">start Date</span>
+        <span class="badge-info">{{lastEventInfo.startTime}}</span>
+      </div>
+    </div>
+    <div class="events-thumbnail-wrapper">
+      {{events-thumbnail
+          class="events-thumbnail"
+          events=eventsInfo
+          pipelineId=pipeline.id
+      }}
+    </div>
+  {{else}}
+    <ContentLoader class="placeholder" @height={{300}} @width={{400}}>
+      <rect x="0" y="0" rx="4" ry="4" width="250" height="40" />
+      <rect x="0" y="75" rx="3" ry="3" width="550" height="90" />
+      <rect x="0" y="180" rx="3" ry="3" width="375" height="40" />
+      <rect x="0" y="240" rx="3" ry="3" width="500" height="70" />
+    </ContentLoader>
   {{/if}}
 </div>

@@ -14,31 +14,26 @@ export default Component.extend({
   pipelineSelected: false,
   classNames: ['pipeline-card'],
   reset: false,
-
+  updated: true,
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
   showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
-  async init() {
-    this._super(...arguments);
-    const { pipeline } = this;
+  async didReceiveAttrs() {
     const metrics = await this.store.query('metric', {
-      pipelineId: pipeline.id,
+      pipelineId: this.pipeline.id,
       page: 1,
       count: 20
     });
 
     const result = formatMetrics(metrics);
-
-    let eventsInfos = result.eventsInfo;
-
-    let lastEventInfos = result.lastEventInfo;
+    const { eventsInfo, lastEventInfo } = result;
 
     this.setProperties({
-      eventsInfo: eventsInfos,
-      lastEventInfo: lastEventInfos
+      eventsInfo,
+      lastEventInfo
     });
   },
 
