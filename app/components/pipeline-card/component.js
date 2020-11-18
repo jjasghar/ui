@@ -19,6 +19,11 @@ export default Component.extend({
   updated: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
+  branch: computed('pipeline', function get() {
+    const { branch, rootDir } = this.pipeline.scmRepo;
+
+    return rootDir ? `${branch}#${rootDir}` : branch;
+  }),
   showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
     return !this.isOrganizing && this.isAuthenticated;
   }),

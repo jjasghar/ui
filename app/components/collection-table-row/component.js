@@ -19,6 +19,11 @@ export default Component.extend({
   updated: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
+  branch: computed('pipeline', function get() {
+    const { branch, rootDir } = this.pipeline.scmRepo;
+
+    return rootDir ? `${branch}#${rootDir}` : branch;
+  }),
   showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
     return !this.isOrganizing && this.isAuthenticated;
   }),
@@ -27,6 +32,7 @@ export default Component.extend({
     if (!this.updated) {
       this.setupInViewport();
     }
+    console.log(this.pipeline);
   },
   setupInViewport() {
     const chooseButton = this.element.querySelector('.collection-pipeline__choose');
