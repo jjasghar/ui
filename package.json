@@ -124,7 +124,6 @@
     "ember-source": "~3.16.0",
     "ember-toggle": "^5.3.3",
     "ember-truth-helpers": "^2.1.0",
-    "ember-content-loader": "^1.0.0",
     "ember-in-viewport": "^3.8.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^5.1.0",

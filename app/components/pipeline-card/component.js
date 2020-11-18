@@ -15,6 +15,7 @@ export default Component.extend({
   pipelineSelected: false,
   classNames: ['pipeline-card'],
   reset: false,
+
   updated: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
@@ -22,21 +23,24 @@ export default Component.extend({
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
-  async didRender() {
-    this.setupInViewport();
+  didRender() {
+    if (!this.updated) {
+      this.setupInViewport();
+    }
   },
-
   setupInViewport() {
-    const { onEnter } = this.inViewport.watchElement(
-      this.element.querySelector('.pipeline-card-content')
-    );
+    const pipelineCardContent = this.element.querySelector('.pipeline-card-content');
+    const { onEnter } = this.inViewport.watchElement(pipelineCardContent);
 
     onEnter(this.didEnterViewport.bind(this));
   },
-
   async didEnterViewport() {
-    this.inViewport.stopWatching(this.element.querySelector('.pipeline-card-content'));
+    const pipelineCardContent = this.element.querySelector('.pipeline-card-content');
 
+    this.inViewport.stopWatching(pipelineCardContent);
+    this.updateEventMetrics();
+  },
+  async updateEventMetrics() {
     const metrics = await this.store.query('metric', {
       pipelineId: this.pipeline.id,
       page: 1,
@@ -51,7 +55,6 @@ export default Component.extend({
       lastEventInfo
     });
   },
-
   actions: {
     removePipeline() {
       this.removePipeline(this.pipeline.id);
