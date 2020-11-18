@@ -6,6 +6,7 @@ import { formatMetrics } from 'screwdriver-ui/utils/metric';
 
 export default Component.extend({
   store: service(),
+  inViewport: service(),
   eventsInfo: null,
   lastEventInfo: null,
   isAuthenticated: undefined,
@@ -14,14 +15,28 @@ export default Component.extend({
   pipelineSelected: false,
   classNames: ['pipeline-card'],
   reset: false,
-  updated: true,
+  updated: and('eventsInfo', 'lastEventInfo'),
   showCheckbox: and('isOrganizing', 'isAuthenticated'),
 
   showRemoveButton: computed('isOrganizing', 'isAuthenticated', function showRemoveButton() {
     return !this.isOrganizing && this.isAuthenticated;
   }),
 
-  async didReceiveAttrs() {
+  async didRender() {
+    this.setupInViewport();
+  },
+
+  setupInViewport() {
+    const { onEnter } = this.inViewport.watchElement(
+      this.element.querySelector('.pipeline-card-content')
+    );
+
+    onEnter(this.didEnterViewport.bind(this));
+  },
+
+  async didEnterViewport() {
+    this.inViewport.stopWatching(this.element.querySelector('.pipeline-card-content'));
+
     const metrics = await this.store.query('metric', {
       pipelineId: this.pipeline.id,
       page: 1,
